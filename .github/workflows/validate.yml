@@ -25,5 +25,19 @@ jobs:
       - name: Check version and manifest consistency
         run: node scripts/check-versions.mjs
 
-      - name: Verify the plugin is discoverable by the plugins CLI
-        run: npx --yes plugins discover . || echo "::warning::plugins discover reported a problem"
+      # Asserts, not warns. A plugin that resolves as "1 skill" with no "mcp"
+      # still installs cleanly on all seven agents — it just silently omits the
+      # MCP server, which is most of the value. That failure is invisible
+      # without this check.
+      - name: Verify the plugin resolves with BOTH a skill and the MCP server
+        run: |
+          out=$(npx --yes plugins discover . 2>&1) || {
+            echo "::error::plugins discover failed"; echo "$out"; exit 1;
+          }
+          echo "$out"
+          echo "$out" | grep -q "skill" || {
+            echo "::error::no skill detected — check skills/<name>/SKILL.md"; exit 1;
+          }
+          echo "$out" | grep -q "mcp" || {
+            echo "::error::MCP server NOT detected. The plugins CLI reads .mcp.json (dot-prefixed); Agent Plugins/Cursor read mcp.json. Both must exist and match."; exit 1;
+          }

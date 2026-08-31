@@ -189,6 +189,23 @@ for (const entry of marketplace.plugins ?? []) {
     }
   }
 
+  // 5b. A declared logo must exist on disk.
+  //
+  // Cursor resolves a relative logo path against raw.githubusercontent.com at
+  // display time, so a stale path renders as a broken image in the marketplace
+  // listing and surfaces no error anywhere we would notice. Its submission
+  // checklist also requires the logo to be committed to the repo.
+  const cursorEntry = cursor?.plugins?.find((p) => p.name === entry.name);
+  for (const [source, logo] of [
+    ['.cursor-plugin/marketplace.json', cursorEntry?.logo],
+    ['marketplace entry', entry.logo],
+  ]) {
+    if (!logo || /^https?:\/\//.test(logo)) continue; // absolute URLs aren't ours to verify
+    if (!existsSync(join(dir, logo))) {
+      fail(`${label}: ${source} declares logo "${logo}", which does not exist at ${rel}/${logo}`);
+    }
+  }
+
   // 6. mcp.json / .mcp.json
   //
   // Two files on purpose. The Agent Plugins spec (Cursor) reads `mcp.json`;
