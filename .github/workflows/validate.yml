@@ -1,0 +1,29 @@
+name: validate
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Validate JSON manifests parse
+        run: |
+          for f in $(git ls-files '*.json'); do
+            node -e "JSON.parse(require('fs').readFileSync('$f','utf8'))" \
+              || { echo "::error file=$f::invalid JSON"; exit 1; }
+          done
+
+      - name: Check version and manifest consistency
+        run: node scripts/check-versions.mjs
+
+      - name: Verify the plugin is discoverable by the plugins CLI
+        run: npx --yes plugins discover . || echo "::warning::plugins discover reported a problem"

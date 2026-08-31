@@ -1,0 +1,39 @@
+{
+  "name": "monid",
+  "owner": {
+    "name": "Monid",
+    "email": "support@monid.ai"
+  },
+  "metadata": {
+    "description": "Official Monid plugins — access hundreds of data endpoints from your agent.",
+    "version": "1.0.0"
+  },
+  "plugins": [
+    {
+      "name": "monid",
+      "source": "plugins/monid",
+      "description": "Discover and run hundreds of data endpoints — web scraping, people/company enrichment, social media, and search — through one interface. Connects to the hosted Monid MCP server; falls back to the Monid CLI when a shell is available.",
+      "version": "1.0.0",
+      "author": {
+        "name": "Monid"
+      },
+      "homepage": "https://monid.ai",
+      "repository": "https://github.com/monid-ai/plugins",
+      "license": "MIT",
+      "logo": "assets/logo.svg",
+      "category": "data",
+      "keywords": [
+        "monid",
+        "data",
+        "scraping",
+        "enrichment",
+        "search",
+        "api",
+        "mcp",
+        "endpoints"
+      ],
+      "skills": "skills",
+      "mcpServers": "mcp.json"
+    }
+  ]
+}

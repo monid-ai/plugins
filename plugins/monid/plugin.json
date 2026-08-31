@@ -1,0 +1,23 @@
+{
+  "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
+  "name": "monid",
+  "version": "1.0.0",
+  "description": "Discover and run hundreds of data endpoints — web scraping, people/company enrichment, social media, and search — through one interface. Connects to the hosted Monid MCP server; falls back to the Monid CLI when a shell is available.",
+  "author": {
+    "name": "Monid",
+    "url": "https://monid.ai"
+  },
+  "homepage": "https://monid.ai",
+  "repository": "https://github.com/monid-ai/plugins",
+  "license": "MIT",
+  "keywords": [
+    "monid",
+    "data",
+    "scraping",
+    "enrichment",
+    "search",
+    "api",
+    "mcp",
+    "endpoints"
+  ]
+}
