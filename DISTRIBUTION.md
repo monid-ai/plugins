@@ -27,10 +27,22 @@ npx plugins discover .            # must print "1 skill, mcp"
 git commit -am "..." && git push
 ```
 
-5. **Re-upload `SKILL.md` to [ClawHub](https://clawhub.ai/monid/skills/monid)** — the only channel that does not update itself
+5. Publish a GitHub release — this fires `publish-clawhub.yml`, which pushes the skill to [ClawHub](https://clawhub.ai/monid/skills/monid)
 6. Update **Version** on the affected [Notion rows](https://app.notion.com/p/3cd3fb3d4dd280d3b71fd06471787154)
 
 Skipping the bump is the failure mode that looks like nothing happened: Claude Code and Cursor pin installs to the version field, so users never receive a change that didn't move it. Use the script rather than editing by hand — five files is four too many to get right consistently.
+
+---
+
+## ClawHub is automated
+
+An earlier version of this file called ClawHub "the one channel that will silently rot". That was wrong. It has a CLI (`clawhub skill publish`), a REST API, and an official reusable GitHub Action, wired up in `.github/workflows/publish-clawhub.yml`.
+
+Publishes are content-fingerprinted upstream, so a release whose `SKILL.md` is unchanged is a no-op rather than a spurious patch version.
+
+**Never pass `categories` or `topics` from CI.** Supplying either suspends that unchanged-skill skip and publishes a new patch version of *every* skill in the run. Set them once from the skill's settings page on ClawHub.
+
+Requires a `CLAWHUB_TOKEN` repository secret.
 
 ---
 

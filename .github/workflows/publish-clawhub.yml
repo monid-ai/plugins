@@ -1,0 +1,49 @@
+name: publish-clawhub
+
+# Publishes the Monid skill to ClawHub (clawhub.ai/monid/skills/monid).
+#
+# Publishes are content-fingerprinted upstream: a run whose SKILL.md is
+# unchanged reports "already synced" and creates no version. That makes it
+# safe to run on every release without generating spurious patch versions.
+#
+# Deliberately NOT passing `categories` or `topics`. Supplying either
+# suspends the unchanged-skill skip and publishes a new patch version of
+# every skill in the run, including ones whose files did not change. Set
+# them once from the skill's settings page on ClawHub instead.
+
+on:
+  release:
+    types: [published]
+  pull_request:
+    paths:
+      - 'plugins/*/skills/**'
+      - '.github/workflows/publish-clawhub.yml'
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: 'Preview without publishing'
+        type: boolean
+        default: true
+
+permissions:
+  contents: read
+
+jobs:
+  # Pull requests preview only — never publish from an untrusted ref.
+  dry-run:
+    if: github.event_name == 'pull_request'
+    uses: openclaw/clawhub/.github/workflows/skill-publish.yml@v1
+    with:
+      root: plugins/monid/skills
+      owner: monid
+      dry_run: true
+
+  publish:
+    if: github.event_name == 'release' || github.event_name == 'workflow_dispatch'
+    uses: openclaw/clawhub/.github/workflows/skill-publish.yml@v1
+    with:
+      root: plugins/monid/skills
+      owner: monid
+      dry_run: ${{ github.event_name == 'workflow_dispatch' && inputs.dry_run || false }}
+    secrets:
+      clawhub_token: ${{ secrets.CLAWHUB_TOKEN }}
