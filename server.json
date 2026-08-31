@@ -1,0 +1,18 @@
+{
+  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
+  "name": "ai.monid/monid",
+  "title": "Monid",
+  "description": "Discover and run hundreds of data endpoints: scraping, enrichment, search, and more.",
+  "version": "1.2.0",
+  "websiteUrl": "https://monid.ai",
+  "repository": {
+    "url": "https://github.com/monid-ai/plugins",
+    "source": "github"
+  },
+  "remotes": [
+    {
+      "type": "streamable-http",
+      "url": "https://mcp.monid.ai/v1"
+    }
+  ]
+}
