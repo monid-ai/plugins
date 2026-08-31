@@ -103,10 +103,17 @@ It fails the build if any manifest, marketplace entry, or skill version disagree
 
 ## Releasing
 
-1. Edit `SKILL.md` and/or `mcp.json`.
-2. Bump the version in all four places (`plugins/monid/plugin.json`, `plugins/monid/.claude-plugin/plugin.json`, both `marketplace.json` files) and in the skill's `metadata.version`.
-3. `node scripts/check-versions.mjs`
-4. Commit and push to `main`. Claude Code and `npx plugins` pick it up on the next refresh; Cursor re-indexes via Auto Refresh.
+```bash
+# 1. Edit SKILL.md and/or mcp.json, then:
+node scripts/bump-version.mjs 1.1.0   # updates all 5 places + mirrors .mcp.json
+node scripts/check-versions.mjs
+npx plugins discover .                # must print "1 skill, mcp"
+git commit -am "..." && git push
+```
+
+Claude Code and `npx plugins` pick it up on the next refresh; Cursor re-indexes via Auto Refresh.
+
+Then re-upload `SKILL.md` to [ClawHub](https://clawhub.ai/monid/skills/monid) — it is the only channel that does not update itself — and update the row in [the distribution database](https://app.notion.com/p/3cd3fb3d4dd280d3b71fd06471787154).
 
 ---
 

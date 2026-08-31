@@ -13,21 +13,24 @@ This file covers only what must live next to the code.
 
 Run this whenever `SKILL.md` or `mcp.json` changes.
 
-1. Edit `plugins/monid/skills/monid/SKILL.md` and/or `plugins/monid/mcp.json`
-2. If you touched `mcp.json`, copy it to `.mcp.json` — they must stay identical
-3. Bump the version in **five** places:
-   - `plugins/monid/plugin.json`
-   - `plugins/monid/.claude-plugin/plugin.json`
-   - `.claude-plugin/marketplace.json` (entry)
-   - `.cursor-plugin/marketplace.json` (entry)
-   - `metadata.version` in `SKILL.md`
-4. `node scripts/check-versions.mjs`
-5. `npx plugins discover .` → must print `1 skill, mcp`
-6. Commit and push to `main`
-7. **Re-upload `SKILL.md` to [ClawHub](https://clawhub.ai/monid/skills/monid)** — the only channel that does not update itself
-8. Update **Version published** on the affected Notion rows
+```bash
+# 1. Edit plugins/monid/skills/monid/SKILL.md and/or plugins/monid/mcp.json
 
-Skipping step 3 is the failure mode that looks like nothing happened: Claude Code and Cursor pin installs to the version field, so users never receive a change that didn't move it.
+# 2. Bump everywhere at once (5 files + mirrors mcp.json -> .mcp.json)
+node scripts/bump-version.mjs 1.1.0
+
+# 3. Verify
+node scripts/check-versions.mjs
+npx plugins discover .            # must print "1 skill, mcp"
+
+# 4. Ship
+git commit -am "..." && git push
+```
+
+5. **Re-upload `SKILL.md` to [ClawHub](https://clawhub.ai/monid/skills/monid)** — the only channel that does not update itself
+6. Update **Version** on the affected [Notion rows](https://app.notion.com/p/3cd3fb3d4dd280d3b71fd06471787154)
+
+Skipping the bump is the failure mode that looks like nothing happened: Claude Code and Cursor pin installs to the version field, so users never receive a change that didn't move it. Use the script rather than editing by hand — five files is four too many to get right consistently.
 
 ---
 
